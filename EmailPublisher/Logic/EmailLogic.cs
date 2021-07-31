@@ -1,17 +1,26 @@
 ﻿using EmailPublisher.Model;
+using EmailPublisher.Service;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace EmailPublisher.Logic
 {
     public class EmailLogic
     {
+        private readonly EmailClient _emailClient;
         private const string _requestNotSupplied = "Email request is not supplied";
         private const string _notAuthorized      = "Not authorized to send emails to this email address";
         private const string _errorOccured       = "Error occured";
         private const string _success            = "Successfully sent the email";
 
-        public Status<EmailResponse> SendEmail(EmailRequest emailRequest)
+        public EmailLogic()
+        {
+            // TODO:  remove poor man's DI
+            _emailClient = new EmailClient();
+        }
+
+        public async Task<Status<EmailResponse>> SendEmail(EmailRequest emailRequest)
         {
             // Validate
             var validationResult = ValidateEmailRequest(emailRequest);
@@ -22,10 +31,10 @@ namespace EmailPublisher.Logic
                 return new Status<EmailResponse>(false, validationResult.Message, null);
             }
 
-            // Send Email
+            // Send the email
             try
             {
-                // TODO:  get an smtp server - could not create SendGrid account in Azure - service problems?
+                await _emailClient.SendEmail(emailRequest);
             }
             catch
             {
@@ -71,16 +80,8 @@ namespace EmailPublisher.Logic
         {
             get
             {
-                return new List<string> { "mikemcsecertified@hotmail.com" };
+                return new List<string> { "mikemcsecertified@hotmail.com", "mikemcsecertified@gmail.com" };
             }
         }
     }
-
-    //Create a Azure Function
-    //Create a POST endpoint that takes an email address and a name
-    //Send that person an email with a body that contains their name and whatever else
-    //Probably limit it to just @pfl and your own email address and return a 400-level status otherwise
-    //Send us a link to the live service and a sample payload and we’ll test it out.
-    //You should be able to sign up for a trial period of azure that provides a fair amount of resources for free, but I can also set up an acct for you if that’d be preferable
-    //Send us a link to a bitbucket/github/dropbox/etc repository where we can look at your code
 }

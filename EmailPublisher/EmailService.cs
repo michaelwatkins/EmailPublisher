@@ -15,7 +15,6 @@ namespace EmailPublisher
     {
         private const string _requestCompleted = "Request to send email completed";
         private const string _requestTriggered = "Request to send email triggered";
-        private const string _emailSuccess     = "Successfully sent email";
         private static readonly EmailLogic _emailLogic;
 
         static EmailService()
@@ -37,7 +36,7 @@ namespace EmailPublisher
             var emailRequest = JsonConvert.DeserializeObject<EmailRequest>(body);
 
             // Send the email
-            var result = _emailLogic.SendEmail(emailRequest);
+            var result = await _emailLogic.SendEmail(emailRequest);
 
             // Return an error if our operation failed
             if (!result.IsSuccessful) return new BadRequestResult();
