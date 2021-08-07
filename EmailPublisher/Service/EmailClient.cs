@@ -8,7 +8,7 @@ namespace EmailPublisher.Service
     public class EmailClient
     {
         // TODO:  store in Azure app settings
-        private const string _apiKey         = "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";
+        private const string _apiKey         = "nope";
         private const string _from           = "mikemcsecertified@hotmail.com";
         private const string _fromName       = "Support";
         private const string _defaultSubject = "Message from Michael's Email Service";
